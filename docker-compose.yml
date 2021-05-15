@@ -1,12 +1,12 @@
 version: '3'
 services:
   backend:
+    image: docker.pkg.github.com/honeytrap15/sigfox-platform/backend:${GIT_HASH:-latest}
     container_name: backend
     build:
       context: backend
       args:
         - GIT_REV=${GIT_HASH}
-    image: ${REGISTRY_URL}backend-${SUBDOMAIN:-localhost}:${GIT_HASH:-latest}
     restart: 'always'
     env_file: env/backend.env
     command: npm start
@@ -14,9 +14,9 @@ services:
       - '3000:3000'
 
   primus:
+    image: docker.pkg.github.com/honeytrap15/sigfox-platform/primus:${GIT_HASH:-latest}
     container_name: primus
     build: primus
-    image: ${REGISTRY_URL}primus-${SUBDOMAIN:-localhost}:${GIT_HASH:-latest}
     restart: 'always'
     env_file: env/primus.env
     command: npm start
@@ -24,6 +24,7 @@ services:
       - '2333:2333'
 
   frontend:
+    image: docker.pkg.github.com/honeytrap15/sigfox-platform/frontend:${GIT_HASH:-latest}
     container_name: frontend
     build:
       context: frontend
@@ -33,7 +34,6 @@ services:
         - API_URL=${API_URL:-http://localhost:3000}
         - API_VERSION=${API_VERSION:-api}
         - PRIMUS_URL=${PRIMUS_URL:-http://localhost:2333}
-    image: ${REGISTRY_URL}frontend-${SUBDOMAIN:-localhost}:${GIT_HASH:-latest}
     restart: 'always'
     ports:
       - '4200:80'
